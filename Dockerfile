@@ -12,6 +12,9 @@ RUN dotnet restore
 COPY aspnetapp/. .
 RUN dotnet publish --no-restore -o /app
 
+# https://github.com/dotnet/AspNetCore.Docs/issues/19814
+ENV DOTNET_HOSTBUILDER__RELOADCONFIGONCHANGE=false
+
 
 # final stage/image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
