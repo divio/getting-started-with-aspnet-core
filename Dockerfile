@@ -19,5 +19,7 @@ EXPOSE 80
 WORKDIR /app
 COPY --from=build /app .
 USER $APP_UID
-ENV ASPNETCORE_URLS=http://+:80 
+ENV ASPNETCORE_URLS=http://+:80
+# https://github.com/dotnet/AspNetCore.Docs/issues/19814
+ENV DOTNET_HOSTBUILDER__RELOADCONFIGONCHANGE=false
 ENTRYPOINT ["./aspnetapp"]
