@@ -17,7 +17,7 @@ Install the [Divio CLI](https://github.com/divio/divio-cli) to set up your app l
 Alternatively, build this app locally using Docker:
 
 1. Ensure [Docker](https://docs.docker.com/get-docker/) is installed and running.
-2. Run `docker compose build` to build fresh images.
-3. Run `docker compose up` to start the project.
-4. Open `http://localhost` in your favorite web browser.
-5. Run `docker compose down --remove-orphans` to stop the Docker containers.
+2. Clone this repository locally.
+3. Build the app with `docker compose build`.
+6. Run the app using `docker compose up`.
+7. Open [http://localhost:8000]() to view your app.
