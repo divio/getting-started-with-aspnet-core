@@ -6,5 +6,4 @@ services:
     ports:
       - "8000:80"
     volumes:
-      - ".:/app:rw"
       - "./data:/data:rw"
