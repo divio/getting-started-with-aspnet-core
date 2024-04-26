@@ -5,6 +5,7 @@ WORKDIR /source
 
 # https://github.com/dotnet/AspNetCore.Docs/issues/19814
 ENV DOTNET_HOSTBUILDER__RELOADCONFIGONCHANGE=false
+ENV DOTNET_USE_POLLING_FILE_WATCHER=true
 
 # copy csproj and restore as distinct layers
 COPY aspnetapp/*.csproj .
@@ -21,6 +22,7 @@ RUN dotnet publish --no-restore -o /app
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine
 # https://github.com/dotnet/AspNetCore.Docs/issues/19814
 ENV DOTNET_HOSTBUILDER__RELOADCONFIGONCHANGE=false
+ENV DOTNET_USE_POLLING_FILE_WATCHER=true
 ENV ASPNETCORE_URLS=http://+:80
 EXPOSE 80
 WORKDIR /app
