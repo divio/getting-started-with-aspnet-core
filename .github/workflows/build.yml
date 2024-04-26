@@ -1,0 +1,31 @@
+name: Build template
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build docker image
+        run: |
+          docker compose build
+          docker compose run --rm web composer install
+
+      - name: Run docker container
+        run: docker compose up -d
+
+      - name: Test if service is reachable
+        run: |
+          sleep 30
+          curl -v -s --retry 10 --retry-connrefused http://localhost:8000/
+
+      - name: Report error to Sentry
+        if: failure()
+        run: |
+          curl -sL https://sentry.io/get-cli/ | bash
+          export SENTRY_DSN=${{ secrets.SENTRY_DSN }}
+          MESSAGE_HEAD='Template: "${{ github.workflow }}" failed in ${{ github.repository }}.'
+          MESSAGE_BODY='Check <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}> for more details.'
+          sentry-cli send-event -m "$MESSAGE_HEAD" -m "$MESSAGE_BODY" --log-level=error

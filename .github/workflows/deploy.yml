@@ -1,0 +1,40 @@
+name: Deploy template
+
+on:
+  push:
+  schedule:
+    - cron: "55 14 * * *"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install divio-cli
+
+      - name: Deploy to Divio
+        run: |
+          divio login ${{ secrets.DIVIO_TOKEN }}
+          divio app deploy test --remote-id ${{ secrets.DIVIO_WEBSITE_ID }} --build-mode FORCE
+
+      - name: Test if website is reachable
+        run: |
+          curl -v -s --retry 10 --retry-connrefused ${{ secrets.WEBSITE_URL }}
+
+      - name: Report error to Sentry
+        if: failure()
+        run: |
+          curl -sL https://sentry.io/get-cli/ | bash
+          export SENTRY_DSN=${{ secrets.SENTRY_DSN }}
+          MESSAGE_HEAD='Template: "${{ github.workflow }}" failed in ${{ github.repository }}.'
+          MESSAGE_BODY='Check <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}> for more details.'
+          sentry-cli send-event -m "$MESSAGE_HEAD" -m "$MESSAGE_BODY" --log-level=error
