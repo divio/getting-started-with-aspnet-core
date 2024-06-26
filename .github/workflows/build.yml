@@ -17,7 +17,7 @@ jobs:
       - name: Test if service is reachable
         run: |
           sleep 30
-          curl -v -s --retry 10 --retry-connrefused http://localhost:8000/
+          curl -vsfL --retry 10 --retry-connrefused http://localhost:8000/
 
       - name: Report error to Sentry
         if: failure()

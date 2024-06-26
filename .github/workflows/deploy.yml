@@ -28,7 +28,7 @@ jobs:
 
       - name: Test if website is reachable
         run: |
-          curl -v -s --retry 10 --retry-connrefused ${{ secrets.WEBSITE_URL }}
+          curl -vsfL --retry 10 --retry-connrefused ${{ secrets.WEBSITE_URL }}
 
       - name: Report error to Sentry
         if: failure()
