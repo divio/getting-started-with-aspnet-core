@@ -1,5 +1,6 @@
-version: "3"
-
+# The docker-compose.yml file is __only__ used for local development.
+# This means that changes to this file will not affect cloud deployments in any way.
+# Read more at https://docs.divio.com/reference/docker-docker-compose/
 services:
   web:
     build: .
